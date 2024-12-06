@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.3.3/dist/vue.global.min.js"></script>
+  <title>Vue Quiz</title>
+</head>
+
+<body>
+  <div id="app" class="text-center">
+    <h1>Funny quizzz</h1>
+    <p>Use this Quiz For Your Good Sleep<br></p>
+
+    <div v-if="!quizStarted" id="StartBox">
+      <button type="button" class="btn btn-primary" @click="startQuiz">เริ่มทำแบบทดสอบ</button>
+    </div>
+
+    <div v-if="quizStarted" id="QuizBox">
+      <div id="QuizListBox">
+        <div v-for="(quiz, index) in quizlist" :key="index" class="p-2" :id="'quiz' + (index + 1)">
+          <div>Prob {{ index + 1 }}.</div>
+          <div>{{ quiz.question }}</div>
+          <div v-for="(option, optIndex) in quiz.option" :key="optIndex" class="alert alert-info">
+            <input type="radio" :name="'q' + (index + 1)" :value="optIndex + 1" v-model="answers[index]">
+            {{ optIndex + 1 }}. {{ option }}
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" @click="checkAnswers">ตรวจคำตอบ</button>
+      <div id="scoreBox" class="mt-3" v-if="scoreBoxVisible">
+        <div class="alert alert-info">Your score: {{ score }} out of {{ quizlist.length }}</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const app = Vue.createApp({
+      data() {
+        return {
+          quizStarted: false,
+          scoreBoxVisible: false,
+          score: 0,
+          answers: [],
+          quizlist: [
+  {
+    "question": "A flashing red traffic light signifies that a driver should do what?",
+    "option": [
+      "A stop",
+      "B speed up",
+      "C proceed with caution",
+      "D honk the horn"
+    ],
+    "answer": "A stop"
+  },
+  {
+    "question": "A knish is traditionally stuffed with what filling?",
+    "option": [
+      "A potato",
+      "B creamed corn",
+      "C lemon custard",
+      "D raspberry jelly"
+    ],
+    "answer": "A potato"
+  },
+  {
+    "question": "A pita is a type of what?",
+    "option": [
+      "A fresh fruit",
+      "B flat bread",
+      "C French tart",
+      "D fried bean dip"
+    ],
+    "answer": "B flat bread"
+  },
+  {
+    "question": "A portrait that comically exaggerates a person's physical traits is called a what?",
+    "option": [
+      "A landscape",
+      "B caricature",
+      "C still life",
+      "D Impressionism"
+    ],
+    "answer": "B caricature"
+  },
+  {
+    "question": "A second-year college student is usually called a what?",
+    "option": [
+      "A sophomore",
+      "B senior",
+      "C freshman",
+      "D junior"
+    ],
+    "answer": "A sophomore"
+  },
+  {
+    "question": "A student who earns a J.D. can begin his or her career as a what?",
+    "option": [
+      "A lawyer",
+      "B bricklayer",
+      "C doctor",
+      "D accountant"
+    ],
+    "answer": "A lawyer"
+  },
+  {
+    "question": "A triptych is a work of art that is painted on how many panels?",
+    "option": [
+      "A two",
+      "B three",
+      "C five",
+      "D eight"
+    ],
+    "answer": "B three"
+  },
+  {
+    "question": "According to a famous line from the existentialist play 'No Exit' what is hell?",
+    "option": [
+      "A oneself",
+      "B other people",
+      "C little made large",
+      "D hued in green and blue"
+    ],
+    "answer": "B other people"
+  },
+  {
+    "question": "According to a popular slogan, what state should people not 'mess with'?",
+    "option": [
+      "A New York",
+      "B Texas",
+      "C Montana",
+      "D Rhode Island"
+    ],
+    "answer": "B Texas"
+  },
+  {
+    "question": "According to a Yale University study, what smell is the most recognizable to American adults?",
+    "option": [
+      "A tuna",
+      "B laundry",
+      "C popcorn",
+      "D coffee"
+    ],
+    "answer": "D coffee"
+  },
+  {
+    "question": "According to folklore, the 'jackalope' is an antlered version of what animal?",
+    "option": [
+      "A chicken",
+      "B rabbit",
+      "C moose",
+      "D snake"
+    ],
+    "answer": "B rabbit"
+  },
+  {
+    "question": "According to Greek mythology, who was Apollo's twin sister?",
+    "option": [
+      "A Aphrodite",
+      "B Artemis",
+      "C Venus",
+      "D Athena"
+    ],
+    "answer": "B Artemis"
+  },
+  {
+    "question": "According to legend, if you give someone the 'evil eye' what are you doing?",
+    "option": [
+      "A cursing them",
+      "B blessing a child",
+      "C counting money",
+      "D passing time"
+    ],
+    "answer": "A cursing them"
+  },
+  {
+    "question": "According to legend, in what country are you most likely to meet a leprechaun?",
+    "option": [
+      "A Ireland",
+      "B Poland",
+      "C Greenland",
+      "D Scotland"
+    ],
+    "answer": "A Ireland"
+  },
+  {
+    "question": "According to the American Kennel Club, what is the most popular breed of dog in the US as of 1999?",
+    "option": [
+      "A Poodle",
+      "B Beagle",
+      "C German shepherd",
+      "D Labrador retriever"
+    ],
+    "answer": "D Labrador retriever"
+  },
+  {
+    "question": "According to the Bible, Moses and Aaron had a sister named what?",
+    "option": [
+      "A Jochebed",
+      "B Ruth",
+      "C Leah",
+      "D Miriam"
+    ],
+    "answer": "D Miriam"
+  },
+  {
+    "question": "According to the children's nursery rhyme, what type of ocean did Columbus sail in 1492?",
+    "option": [
+      "A calm",
+      "B blue",
+      "C windy",
+      "D really big"
+    ],
+    "answer": "B blue"
+  },
+  {
+    "question": "According to the Mother Goose nursery rhyme, which child is full of woe?",
+    "option": [
+      "A Monday's child",
+      "B Wednesday's child",
+      "C Thursday's child",
+      "D Saturday's child"
+    ],
+    "answer": "B Wednesday's child"
+  },
+  {
+    "question": "According to the popular saying, what should you do 'when in Rome'?",
+    "option": [
+      "A watch your wallet",
+      "B see the Coliseum",
+      "C as the Romans do",
+      "D don't drink the water"
+    ],
+    "answer": "C as the Romans do"
+  },
+  {
+    "question": "According to the proverb, necessity is the mother of what?",
+    "option": [
+      "A Invention",
+      "B Luck",
+      "C Problems",
+      "D Procrastination"
+    ],
+    "answer": "A Invention"
+  }
+]
+        };
+      },
+      methods: {
+        startQuiz() {
+          this.quizStarted = true;
+          this.scoreBoxVisible = false;
+          this.answers = new Array(this.quizlist.length).fill(null);
+        },
+        checkAnswers() {
+          this.score = 0;
+          this.quizlist.forEach((quiz, index) => {
+            const correctOptionIndex = quiz.option.indexOf(quiz.answer);
+            const selectedOptionIndex = this.answers[index] - 1;
+
+            const quizElement = document.getElementById('quiz' + (index + 1));
+            if (quizElement) {
+              quizElement.style.backgroundColor = selectedOptionIndex === correctOptionIndex ? '#d4edda' : '#f8d7da';
+            }
+
+            if (selectedOptionIndex === correctOptionIndex) {
+              this.score++;
+            }
+          });
+          this.scoreBoxVisible = true;
+        }
+      }
+    });
+
+    app.mount('#app');
+  </script>
+
+</body>
+
+</html>
