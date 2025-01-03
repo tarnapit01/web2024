@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <title>React Quiz</title>
+  </head>
+
+  <body>
+    <div id="root"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.21.5/babel.min.js"></script>
+
+    <script type="text/babel">
+      const quizList = [
+        {
+          question:
+            "A flashing red traffic light signifies that a driver should do what?",
+          option: [
+            "A stop",
+            "B speed up",
+            "C proceed with caution",
+            "D honk the horn",
+          ],
+          answer: "A stop",
+        },
+        {
+          question: "A knish is traditionally stuffed with what filling?",
+          option: [
+            "A potato",
+            "B creamed corn",
+            "C lemon custard",
+            "D raspberry jelly",
+          ],
+          answer: "A potato",
+        },
+        {
+          question: "A pita is a type of what?",
+          option: [
+            "A fresh fruit",
+            "B flat bread",
+            "C French tart",
+            "D fried bean dip",
+          ],
+          answer: "B flat bread",
+        },
+        {
+          question:
+            "A portrait that comically exaggerates a person's physical traits is called a what?",
+          option: [
+            "A landscape",
+            "B caricature",
+            "C still life",
+            "D Impressionism",
+          ],
+          answer: "B caricature",
+        },
+        {
+          question: "A second-year college student is usually called a what?",
+          option: ["A sophomore", "B senior", "C freshman", "D junior"],
+          answer: "A sophomore",
+        },
+        {
+          question:
+            "A student who earns a J.D. can begin his or her career as a what?",
+          option: ["A lawyer", "B bricklayer", "C doctor", "D accountant"],
+          answer: "A lawyer",
+        },
+        {
+          question:
+            "A triptych is a work of art that is painted on how many panels?",
+          option: ["A two", "B three", "C five", "D eight"],
+          answer: "B three",
+        },
+        {
+          question:
+            "According to a famous line from the existentialist play 'No Exit' what is hell?",
+          option: [
+            "A oneself",
+            "B other people",
+            "C little made large",
+            "D hued in green and blue",
+          ],
+          answer: "B other people",
+        },
+        {
+          question:
+            "According to a popular slogan, what state should people not 'mess with'?",
+          option: ["A New York", "B Texas", "C Montana", "D Rhode Island"],
+          answer: "B Texas",
+        },
+        {
+          question:
+            "According to a Yale University study, what smell is the most recognizable to American adults?",
+          option: ["A tuna", "B laundry", "C popcorn", "D coffee"],
+          answer: "D coffee",
+        },
+        {
+          question:
+            "According to folklore, the 'jackalope' is an antlered version of what animal?",
+          option: ["A chicken", "B rabbit", "C moose", "D snake"],
+          answer: "B rabbit",
+        },
+        {
+          question:
+            "According to Greek mythology, who was Apollo's twin sister?",
+          option: ["A Aphrodite", "B Artemis", "C Venus", "D Athena"],
+          answer: "B Artemis",
+        },
+        {
+          question:
+            "According to legend, if you give someone the 'evil eye' what are you doing?",
+          option: [
+            "A cursing them",
+            "B blessing a child",
+            "C counting money",
+            "D passing time",
+          ],
+          answer: "A cursing them",
+        },
+        {
+          question:
+            "According to legend, in what country are you most likely to meet a leprechaun?",
+          option: ["A Ireland", "B Poland", "C Greenland", "D Scotland"],
+          answer: "A Ireland",
+        },
+        {
+          question:
+            "According to the American Kennel Club, what is the most popular breed of dog in the US as of 1999?",
+          option: [
+            "A Poodle",
+            "B Beagle",
+            "C German shepherd",
+            "D Labrador retriever",
+          ],
+          answer: "D Labrador retriever",
+        },
+        {
+          question:
+            "According to the Bible, Moses and Aaron had a sister named what?",
+          option: ["A Jochebed", "B Ruth", "C Leah", "D Miriam"],
+          answer: "D Miriam",
+        },
+        {
+          question:
+            "According to the children's nursery rhyme, what type of ocean did Columbus sail in 1492?",
+          option: ["A calm", "B blue", "C windy", "D really big"],
+          answer: "B blue",
+        },
+        {
+          question:
+            "According to the Mother Goose nursery rhyme, which child is full of woe?",
+          option: [
+            "A Monday's child",
+            "B Wednesday's child",
+            "C Thursday's child",
+            "D Saturday's child",
+          ],
+          answer: "B Wednesday's child",
+        },
+        {
+          question:
+            "According to the popular saying, what should you do 'when in Rome'?",
+          option: [
+            "A watch your wallet",
+            "B see the Coliseum",
+            "C as the Romans do",
+            "D don't drink the water",
+          ],
+          answer: "C as the Romans do",
+        },
+        {
+          question:
+            "According to the proverb, necessity is the mother of what?",
+          option: ["A Invention", "B Luck", "C Problems", "D Procrastination"],
+          answer: "A Invention",
+        },
+      ];
+
+      function QuizApp() {
+        const [quizStarted, setQuizStarted] = React.useState(false);
+        const [answers, setAnswers] = React.useState(
+          new Array(quizList.length).fill(null)
+        );
+        const [score, setScore] = React.useState(0);
+        const [showScore, setShowScore] = React.useState(false);
+
+        const startQuiz = () => {
+          setQuizStarted(true);
+          setShowScore(false);
+          setAnswers(new Array(quizList.length).fill(null));
+          setScore(0);
+        };
+
+        const handleAnswerChange = (index, value) => {
+          const updatedAnswers = [...answers];
+          updatedAnswers[index] = value;
+          setAnswers(updatedAnswers);
+        };
+
+        const checkAnswers = () => {
+          let calculatedScore = 0;
+          answers.forEach((answer, index) => {
+            if (quizList[index].option[answer] === quizList[index].answer) {
+              calculatedScore++;
+            }
+          });
+          setScore(calculatedScore);
+          setShowScore(true);
+        };
+
+        return (
+          <div className="text-center container mt-5">
+            <h1>Funny Quiz</h1>
+            <p>Use this Quiz For Your Good Sleep</p>
+
+            {!quizStarted && (
+              <div>
+                <button className="btn btn-primary" onClick={startQuiz}>
+                  Start Quiz
+                </button>
+              </div>
+            )}
+
+            {quizStarted && (
+              <div>
+                {quizList.map((quiz, index) => (
+                  <div key={index} className="p-3 mb-3 border rounded">
+                    <div>Question {index + 1}:</div>
+                    <div>{quiz.question}</div>
+                    {quiz.option.map((option, optIndex) => (
+                      <div key={optIndex} className="form-check">
+                        <input
+                          type="radio"
+                          name={`q${index}`}
+                          value={optIndex}
+                          checked={answers[index] === optIndex}
+                          onChange={() => handleAnswerChange(index, optIndex)}
+                          className="form-check-input"
+                        />
+                        <label className="form-check-label">{option}</label>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+                <button className="btn btn-primary mt-3" onClick={checkAnswers}>
+                  Submit Answers
+                </button>
+              </div>
+            )}
+
+            {showScore && (
+              <div className="alert alert-info mt-3">
+                Your score: {score} out of {quizList.length}
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<QuizApp />);
+    </script>
+  </body>
+</html>
